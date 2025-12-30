@@ -340,9 +340,13 @@ class WebhookOnlySocketService implements IPureSocketListener, ITranscriptSegmen
       debugPrint('[WEBHOOK]   Sample Rate: ${sampleRate}Hz');
       debugPrint('[WEBHOOK]   Format: PCM16 little-endian');
 
+      final apiKey = SharedPreferencesUtil().webhookApiKey;
       final response = await http.post(
         Uri.parse(url),
-        headers: {'Content-Type': 'application/octet-stream'},
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          if (apiKey.isNotEmpty) 'X-API-Key': apiKey,
+        },
         body: audioBytes,
       ).timeout(const Duration(seconds: 30));
 

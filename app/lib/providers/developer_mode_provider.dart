@@ -12,6 +12,7 @@ class DeveloperModeProvider extends BaseProvider {
   final TextEditingController webhookOnTranscriptReceived = TextEditingController();
   final TextEditingController webhookAudioBytes = TextEditingController();
   final TextEditingController webhookAudioBytesDelay = TextEditingController();
+  final TextEditingController webhookApiKey = TextEditingController();
   final TextEditingController webhookWsAudioBytes = TextEditingController();
   final TextEditingController webhookDaySummary = TextEditingController();
 
@@ -128,6 +129,7 @@ class DeveloperModeProvider extends BaseProvider {
     webhookOnTranscriptReceived.text = SharedPreferencesUtil().webhookOnTranscriptReceived;
     webhookAudioBytes.text = SharedPreferencesUtil().webhookAudioBytes;
     webhookAudioBytesDelay.text = SharedPreferencesUtil().webhookAudioBytesDelay;
+    webhookApiKey.text = SharedPreferencesUtil().webhookApiKey;
     followUpQuestionEnabled = SharedPreferencesUtil().devModeJoanFollowUpEnabled;
     transcriptionDiagnosticEnabled = SharedPreferencesUtil().transcriptionDiagnosticEnabled;
     autoCreateSpeakersEnabled = SharedPreferencesUtil().autoCreateSpeakersEnabled;
@@ -224,6 +226,7 @@ class DeveloperModeProvider extends BaseProvider {
       await Future.wait([w1, w2, w3, w4]);
       prefs.webhookAudioBytes = webhookAudioBytes.text;
       prefs.webhookAudioBytesDelay = webhookAudioBytesDelay.text;
+      prefs.webhookApiKey = webhookApiKey.text;
       prefs.webhookOnTranscriptReceived = webhookOnTranscriptReceived.text;
       prefs.webhookOnConversationCreated = webhookOnConversationCreated.text;
       prefs.webhookDaySummary = webhookDaySummary.text;
@@ -273,6 +276,7 @@ class DeveloperModeProvider extends BaseProvider {
     webhookOnTranscriptReceived.dispose();
     webhookAudioBytes.dispose();
     webhookAudioBytesDelay.dispose();
+    webhookApiKey.dispose();
     webhookWsAudioBytes.dispose();
     webhookDaySummary.dispose();
     super.dispose();

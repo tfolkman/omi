@@ -108,6 +108,10 @@ class SharedPreferencesUtil {
 
   set webhookAudioBytesDelay(String value) => saveString('webhookAudioBytesDelay', value);
 
+  String get webhookApiKey => getString('webhookApiKey') ?? '';
+
+  set webhookApiKey(String value) => saveString('webhookApiKey', value);
+
   bool get webhookOnlyModeEnabled => getBool('webhookOnlyModeEnabled') ?? true;
 
   set webhookOnlyModeEnabled(bool value) => saveBool('webhookOnlyModeEnabled', value);

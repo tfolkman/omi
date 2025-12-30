@@ -173,14 +173,22 @@ Future _init() async {
       SharedPreferencesUtil().uid,
     );
   }
-  FlutterError.onError = (FlutterErrorDetails details) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-  };
+  final webhookOnlyMode = SharedPreferencesUtil().webhookOnlyModeEnabled;
+  if (!webhookOnlyMode) {
+    FlutterError.onError = (FlutterErrorDetails details) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+    };
 
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  } else {
+    debugPrint('[PRIVACY] Webhook-only mode: Firebase Crashlytics disabled');
+    FlutterError.onError = (FlutterErrorDetails details) {
+      debugPrint('[ERROR] ${details.exception}');
+    };
+  }
 
   await ServiceManager.instance().start();
   return;
@@ -206,11 +214,13 @@ void main() {
       await _init();
       runApp(const MyApp());
     },
-    (error, stack) => FirebaseCrashlytics.instance.recordError(
-      error,
-      stack,
-      fatal: true,
-    ),
+    (error, stack) {
+      if (!SharedPreferencesUtil().webhookOnlyModeEnabled) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      } else {
+        debugPrint('[ERROR] Uncaught: $error\n$stack');
+      }
+    },
   );
 }
 
